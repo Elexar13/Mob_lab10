@@ -7,6 +7,8 @@ import { DataGetterService, Truck } from '../service/data-getter.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  userName: string;
+
   trucks: Truck[];
 
   showNew = false;
@@ -18,13 +20,12 @@ export class HomePage {
         this.trucks = data;
       }
     );
+    this.userName = this.dataGetter.getUser();
   }
 
   add() {
     this.showNew = true;
   }
-
-  // edit(truck: Truck) {}
 
   delete(index: number) {
     this.dataGetter.deleteTruck(index);

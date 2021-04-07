@@ -20,6 +20,24 @@ export class DataGetterService {
         mark: "Tesla"
       },
     ];
+
+  private userName = '';
+
+  private users = [
+    'Max', 'user', 'admin'
+  ];
+
+  getUser() {
+    return this.userName;
+  }
+
+  setUser(name: string) {
+    this.userName = name;
+  }
+
+  userExists(name: string): boolean {
+    return this.users.indexOf(name) !== -1;
+  }
   constructor() { }
 
   getTrucks(): Observable<Truck[]> {
