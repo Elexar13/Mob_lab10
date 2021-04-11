@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 export interface Truck {
   number: string;
   mark: string;
+  year: number;
 }
 
 @Injectable({
@@ -13,11 +14,18 @@ export class DataGetterService {
   private trucks: Truck[] = [
       {
         number: "BE4567FL",
-        mark: "Volvo"
+        mark: "Volvo",
+        year: 2010
       },
       {
         number: "AA4095UK",
-        mark: "Tesla"
+        mark: "Tesla",
+        year: 2018
+      },
+      {
+        number: "KF6565LK",
+        mark: "Opel",
+        year: 2013
       },
     ];
 
@@ -42,6 +50,12 @@ export class DataGetterService {
 
   getTrucks(): Observable<Truck[]> {
     return of(this.trucks);
+  }
+
+  getTrucksByMarks(truckMark: string): Observable<any[]> {
+    return of(this.trucks.filter(elem => {
+      return elem.mark === truckMark;
+    }));
   }
 
   addTruck(truck: Truck){

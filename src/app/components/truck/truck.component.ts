@@ -20,7 +20,8 @@ export class TruckComponent implements OnInit {
     if (this.isNew) {
       this.truck = {
         number: '',
-        mark: ''
+        mark: '',
+        year: 0
       };
       this.title = 'Нова вантажівка'
     }
