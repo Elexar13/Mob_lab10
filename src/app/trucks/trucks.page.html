@@ -3,12 +3,20 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Вантажівки {{mark}}</ion-title>
+    <ion-title>Вантажівки {{mark.mark_name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
+    <ion-list-header>
+      <ion-button shape="round" fill="outline" color="success" (click)="add()">
+        <ion-icon slot="start" name="add"></ion-icon>Додати
+      </ion-button>
+    </ion-list-header>
+
+    <app-truck *ngIf="showNew && user.is_admin == 'Y'" [isNew]="true" [markId]="markId"></app-truck>
+
     <ion-item *ngFor="let truck of trucks; let i = index" text-wrap>
 <!--      <ion-label text-wrap>{{truck.number}}</ion-label>-->
 <!--      <ion-note slot="end">{{truck.year}}</ion-note>-->
@@ -18,18 +26,18 @@
             <ion-icon name="create"></ion-icon>
             Змінити
           </ion-item-option>
-          <ion-item-option color="danger" (click)="delete(i)">
+          <ion-item-option color="danger" (click)="delete(truck)">
             <ion-icon name="trash"></ion-icon>
             Видалити
           </ion-item-option>
         </ion-item-options>
         <ion-item (click)="showEdit=-1">
           <ion-icon name="car-outline" slot="start"></ion-icon>
-          <ion-label>{{truck.number}}</ion-label>
+          <ion-label>{{truck.truck_number}}</ion-label>
           <ion-note slot="end">{{truck.year}}</ion-note>
         </ion-item>
       </ion-item-sliding>
-      <app-truck *ngIf="showEdit==i" [isNew]="false"
+      <app-truck *ngIf="showEdit==i && user.is_admin == 'Y'" [isNew]="false"
                        [truck]="truck"></app-truck>
     </ion-item>
   </ion-list>

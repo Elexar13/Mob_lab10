@@ -10,6 +10,8 @@ import {AlertController} from "@ionic/angular";
 })
 export class LoginPage implements OnInit {
   userName: string;
+  password: string;
+  isAdmin: string;
 
   constructor(
     private router: Router,
@@ -20,19 +22,37 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    if (this.dataGetter.userExists(this.userName)) {
-      this.dataGetter.setUser(this.userName);
-      this.router.navigate(['/home']);
-    } else {
-      this.userNotExistAlert();
-    }
+    this.dataGetter.checkUser({
+      username: this.userName,
+      password: this.password
+    }).subscribe(
+      result => {
+        if (result.hasOwnProperty('error')) {
+          this.userNotExistAlert(result.error);
+        } else {
+          if (result.hasOwnProperty('token')) {
+            this.dataGetter.setUserName(this.userName);
+            this.dataGetter.setToken(result.token);
+            this.dataGetter.getUserByName(this.userName).subscribe(
+              data => {
+                this.dataGetter.setUser(data.pop());
+                this.isAdmin = data.is_admin;
+              }
+            );
+            this.router.navigate(['/home']);
+          } else {
+            this.userNotExistAlert('Unexpected error');
+          }
+        }
+      }
+    );
   }
 
-  async userNotExistAlert() {
+  async userNotExistAlert(message) {
     const alert = await this.alertController.create({
       header: 'Увага!',
       subHeader: 'Помилка аутентифікації',
-      message: `Користувача ${this.userName} не знайдено. Невірне ім'я користувача.`,
+      message: message,
       buttons: ['OK']
     });
     await alert.present();

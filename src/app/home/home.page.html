@@ -16,15 +16,11 @@
 <ion-content>
   <ion-list>
     <ion-list-header>
-      <ion-label>Вантажівки</ion-label>
       <ion-button shape="round" fill="outline" color="success" (click)="add()">
         <ion-icon slot="start" name="add"></ion-icon>Додати
       </ion-button>
     </ion-list-header>
-
-    <app-truck *ngIf="showNew" [isNew]="true"
-               (addTruck)="addTruck($event)"
-               (cancelAddingTruck)="showNew=false"></app-truck>
+    <app-mark *ngIf="showNew && user.is_admin == 'Y'" [isNew]="true"></app-mark>
 
     <div *ngFor="let mark of marks;let i = index">
       <ion-item-sliding>
@@ -33,25 +29,26 @@
             <ion-icon name="create"></ion-icon>
             Змінити
           </ion-item-option>
-          <ion-item-option color="danger" (click)="delete(i)">
+          <ion-item-option color="danger" (click)="deleteMark(mark)">
             <ion-icon name="trash"></ion-icon>
             Видалити
           </ion-item-option>
         </ion-item-options>
         <ion-item (click)="showEdit=-1">
           <ion-icon name="car-outline" slot="start"></ion-icon>
-          <ion-label>{{mark}}</ion-label>
+          <ion-label>{{mark.mark_name}}</ion-label>
+          <ion-label slot="end">{{mark.country}}</ion-label>
         </ion-item>
         <ion-item-options side="end">
-          <ion-item-option color="secondary" routerLink="/trucks/{{mark}}"
+          <ion-item-option color="secondary" routerLink="/trucks/{{mark.mark_id}}"
                             routerDirection="forward">
             <ion-icon name="reorder-four-outline"></ion-icon>
             Вантажівки
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
-<!--      <app-truck *ngIf="showEdit==i" [isNew]="false"-->
-<!--                 [truck]="truck"></app-truck>-->
+      <app-mark *ngIf="showEdit==i && user.is_admin == 'Y'" [isNew]="false"
+                 [mark]="mark"></app-mark>
     </div>
   </ion-list>
 </ion-content>

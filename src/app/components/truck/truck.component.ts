@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {Truck} from "../../service/data-getter.service";
+import {DataGetterService, Mark, Truck} from "../../service/data-getter.service";
 
 @Component({
   selector: 'app-truck',
@@ -10,17 +10,18 @@ export class TruckComponent implements OnInit {
 
   @Input() truck: Truck;
   @Input() isNew: boolean;
+  @Input() markId: number;
   @Output() addTruck = new EventEmitter();
   @Output() cancelAddingTruck = new EventEmitter();
   title: string;
 
-  constructor() { }
+  constructor(private dataGetter: DataGetterService) { }
 
   ngOnInit() {
     if (this.isNew) {
       this.truck = {
-        number: '',
-        mark: '',
+        truck_number: '',
+        markId: this.markId,
         year: 0
       };
       this.title = 'Нова вантажівка'
@@ -33,10 +34,27 @@ export class TruckComponent implements OnInit {
     }
   }
 
+  addNewTruck() {
+    console.log(this.truck);
+    if (this.isNew) {
+      this.dataGetter.addTruck(this.truck).subscribe(
+        data => console.log(data)
+      );
+    } else {
+      this.saveTruck();
+    }
+  }
+
   cancelAdding() {
     if (this.isNew) {
       this.cancelAddingTruck.emit();
     }
+  }
+
+  saveTruck() {
+    this.dataGetter.editTruck(this.truck).subscribe(
+      data => console.log(data)
+    );
   }
 
 }

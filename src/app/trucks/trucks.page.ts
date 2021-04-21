@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {DataGetterService, Truck} from "../service/data-getter.service";
+import {DataGetterService, Mark, Truck, User} from "../service/data-getter.service";
 import {ActivatedRoute} from "@angular/router";
 import {SharedDataService} from "../services/shared-data.service";
 
@@ -9,8 +9,9 @@ import {SharedDataService} from "../services/shared-data.service";
   styleUrls: ['./trucks.page.scss'],
 })
 export class TrucksPage implements OnInit {
-  mark: string;
-
+  markId: string;
+  mark: Mark;
+  user: User;
   textData: string;
   trucks: Truck[];
 
@@ -22,12 +23,15 @@ export class TrucksPage implements OnInit {
               private sharedData: SharedDataService) { }
 
   ngOnInit() {
-    this.mark = this.route.snapshot.paramMap.get('mark');
-    this.dataGetter.getTrucksByMarks(this.mark).subscribe(
+    this.markId = this.route.snapshot.paramMap.get('markId');
+    this.dataGetter.getTrucksByMarks(this.markId).subscribe(
       data => {
         this.trucks = data;
       }
     );
+    this.mark = this.dataGetter.marks.filter(m => m.mark_id == Number(this.markId)).pop();
+    this.user = this.dataGetter.getUser();
+    console.log('user in trucks - ' + this.user);
   }
 
   passData() {
@@ -38,11 +42,14 @@ export class TrucksPage implements OnInit {
     this.showNew = true;
   }
 
-  delete(index: number) {
-    this.dataGetter.deleteTruck(index);
+  delete(truck: Truck) {
+    this.dataGetter.deleteTruck(truck).subscribe(
+      data => console.log(data)
+    );
   }
 
   addTruck(truck) {
+    console.log(truck);
     this.dataGetter.addTruck(truck);
     this.showNew = false;
   }
